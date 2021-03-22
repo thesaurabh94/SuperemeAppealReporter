@@ -476,26 +476,40 @@ public class SearchDaoImpl implements SearchDao {
 		
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		boolean isSecondaryCitationCase = false;
-		if(searchRequest.getCitationSearchJournal()!=null && "SAR Online".equalsIgnoreCase(searchRequest.getOtherCitationSearchJournal())){
-			isSecondaryCitationCase  = true;
+		if(searchRequest.getCitationSearchJournal()!=null && "SAR Online".equalsIgnoreCase(searchRequest.getCitationSearchJournal())){
+			//isSecondaryCitationCase  = true;
 			query.append(" SELECT DISTINCT A.ID FROM"
 					+ "   ( SELECT ce.id,ce.appellant as appellant_1, DATE(CONCAT_WS('-', ch.decided_year, ch.decided_month, ch.decided_day)) as date_1 "
 					+ "     from case_entity ce "
 					+ "     left join case_history ch on ce.case_history_entity_id = ch.id "
 					+ "     left join citation c on ce.citation_entity_id = c.id "
 					+ "     left join citation_category cc on c.citation_category_entity_id = cc.id"
+					//+ "     left join secondary_citation scc on c.secondary_citation_entity_id = scc.id"
 					+ "     left join journal j on c.journal_entity_id = j.id where ");
 			
 		}
-		else {	
+		else if("SAR".equalsIgnoreCase(searchRequest.getCitationSearchJournal())){
+			isSecondaryCitationCase  = true;
 		query.append(" SELECT DISTINCT A.ID FROM"
 				+ "   ( SELECT ce.id,ce.appellant as appellant_1, DATE(CONCAT_WS('-', ch.decided_year, ch.decided_month, ch.decided_day)) as date_1 "
 				+ "     from case_entity ce "
 				+ "     left join case_history ch on ce.case_history_entity_id = ch.id "
 				+ "     left join citation c on ce.citation_entity_id = c.id "
-				+ "     left join citation_category cc on c.citation_category_entity_id = cc.id"
 				+ "     left join secondary_citation scc on c.secondary_citation_entity_id = scc.id"
+				+ "     left join citation_category cc on scc.citation_category_entity_id = cc.id"
 				+ "     left join journal j on c.journal_entity_id = j.id where ");
+		
+		}
+		else {
+			isSecondaryCitationCase  = true;
+		query.append(" SELECT DISTINCT A.ID FROM"
+				+ "   ( SELECT ce.id,ce.appellant as appellant_1, DATE(CONCAT_WS('-', ch.decided_year, ch.decided_month, ch.decided_day)) as date_1 "
+				+ "     from case_entity ce "
+				+ "     left join case_history ch on ce.case_history_entity_id = ch.id "
+				+ "     left join citation c on ce.citation_entity_id = c.id "
+				+ "     left join secondary_citation scc on c.secondary_citation_entity_id = scc.id"
+				+ "     left join citation_category cc on scc.citation_category_entity_id = cc.id"
+				+ "     left join journal j on scc.journal_entity_id = j.id where ");
 		
 		}
 	/*	query.append(" select distinct ce.id "

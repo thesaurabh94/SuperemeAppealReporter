@@ -292,7 +292,7 @@ public class MasterServiceImpl implements MasterService {
 		
 		 Iterable<CourtBenchEntity> itrCourtBench = courtBenchRepository.findAll();
 		 Iterable<JournalEntity> itrJournal = journalReposiotry.findAll();
-		 Iterable<CitationCategoryEntity> itrCitationCategory = citationCategoryRepository.findAll();
+		 List<CitationCategoryEntity> itrCitationCategory = citationCategoryRepository.findAllActive();
 		 
 		 
 		 List<GetCourtDropDownResponse> courtBenchDropdownResponse = new ArrayList<GetCourtDropDownResponse>();
@@ -324,6 +324,7 @@ public class MasterServiceImpl implements MasterService {
 			 getCitationCategoryDropdownResponse.setId(citationCategoryEntity.getId());
 			 getCitationCategoryDropdownResponse.setLabel(citationCategoryEntity.getCitationCategoryName());
 			 getCitationCategoryDropdownResponse.setValue(citationCategoryEntity.getCitationCategoryName());
+			 getCitationCategoryDropdownResponse.setJournalId(citationCategoryEntity.getJournal().getId());
 			 citationCategoryDropDownResponse.add(getCitationCategoryDropdownResponse);	 
 			 }
 		 }
@@ -335,6 +336,7 @@ public class MasterServiceImpl implements MasterService {
 			 getCaseCategoryDropdownResponse.setId(citationCategoryEntity.getId());
 			 getCaseCategoryDropdownResponse.setLabel(citationCategoryEntity.getCitationCategoryName());
 			 getCaseCategoryDropdownResponse.setValue(citationCategoryEntity.getCitationCategoryName());
+			 getCaseCategoryDropdownResponse.setJournalId(citationCategoryEntity.getJournal().getId());
 			 caseCategoryDropdownResponse.add(getCaseCategoryDropdownResponse);	 
 			 }
 		 }

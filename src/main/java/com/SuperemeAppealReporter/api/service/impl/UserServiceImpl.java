@@ -218,7 +218,7 @@ public class UserServiceImpl implements UserService {
 		UserEntity savedEntity = userDao.saveUserEntity(userEntity);
 		
 		/** call to activate trial pack**/
-		
+		savedEntity.setSubscriptionActive(true);
 		callToSaveAndActivateTrialPack(savedEntity);
 		
 		/** Creating OnBoardingMail object **/
@@ -785,6 +785,8 @@ public class UserServiceImpl implements UserService {
 
 		List<UserSubscriptionDetailEntity> userSubscriptionDetailEntityList = userEntity.getUserSubscriptionDetailEntityList();
 		
+		userSubscriptionDetailEntityList.sort((UserSubscriptionDetailEntity e1, UserSubscriptionDetailEntity e2)->e2.getStartDate().compareTo(e1.getStartDate()));
+		
 		List<UserOrderResponse> userOrderResponseList = new ArrayList<UserOrderResponse>();
 		
 		for(UserSubscriptionDetailEntity entity : userSubscriptionDetailEntityList)
@@ -807,11 +809,11 @@ public class UserServiceImpl implements UserService {
 			userOrderResponse.setPlanType(entity.getSubscriptionPlanEntity().getSubscriptionName());
 			if(entity.getStartDate().after(new Date()))
 			{
-				userOrderResponse.setFuturePlan(true);
+				userOrderResponse.setIsFuturePlan("Y");
 			}
 			else
 			{
-				userOrderResponse.setFuturePlan(false);
+				userOrderResponse.setIsFuturePlan("N");
 			}
 			userOrderResponseList.add(userOrderResponse);
 			

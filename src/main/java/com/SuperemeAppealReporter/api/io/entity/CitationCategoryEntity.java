@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -36,4 +37,7 @@ public class CitationCategoryEntity extends BaseEntity {
 	/**------------------------Mappings-------------------------**/
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "citationCategoryEntity")
 	private Set<CitationEntity> citationEntitySet;
+	
+	@OneToOne(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST},fetch = FetchType.LAZY)
+	private JournalEntity journal;
 }

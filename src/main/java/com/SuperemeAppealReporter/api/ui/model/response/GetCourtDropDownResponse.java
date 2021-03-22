@@ -16,4 +16,6 @@ public class GetCourtDropDownResponse {
 	private int id;
 	private String value;
 	private String label;
+	
+	private Integer journalId;
 }

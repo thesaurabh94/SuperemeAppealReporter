@@ -1181,15 +1181,52 @@ public class AdminServiceImpl implements AdminService {
 		  paymentEntity.setUser(userEntity);
 		  PaymentEntity savedPaymentEntity = paymentRepository.save(paymentEntity);
 		
-		UserSubscriptionDetailEntity subscriptionDetailEntity = new UserSubscriptionDetailEntity();
-		subscriptionDetailEntity.setIs_plan_active(true);
-		subscriptionDetailEntity.setStartDate(new Date());
-		subscriptionDetailEntity.setEndDate(endDate);
-		subscriptionDetailEntity.setSubscriptionPlanEntity(planEntity);
-		subscriptionDetailEntity.setPaymentEntity(savedPaymentEntity);
-		subscriptionDetailEntity.setUserEntity(userEntity);
+		  /**Creating an entry in user subscription**/
+		   UserSubscriptionDetailEntity userSubscriptionDetailEntity = new UserSubscriptionDetailEntity();
+		   userSubscriptionDetailEntity.setIs_plan_active(true);
+		   userSubscriptionDetailEntity.setStartDate(new Date());
+		   userSubscriptionDetailEntity.setEndDate(endDate);
+		   userSubscriptionDetailEntity.setPaymentEntity(paymentEntity);
+		   userSubscriptionDetailEntity.setSubscriptionPlanEntity(planEntity);
+		   userSubscriptionDetailEntity.setUserEntity(paymentEntity.getUser());
+		   
 		
-		userSubscriptionDetailRepository.save(subscriptionDetailEntity);
+	   	 
+	   /**Checking if the user has already an active Plan**/
+		List<UserSubscriptionDetailEntity> previousUserSubscriptionDetailEntityList =  userSubscriptionDetailRepository.findByUserId(userEntity.getId(),true);
+		
+		if(previousUserSubscriptionDetailEntityList!=null && previousUserSubscriptionDetailEntityList.size()>0)
+		{
+			List<Date> endDateList = new ArrayList<Date>();
+		for(UserSubscriptionDetailEntity userSub : previousUserSubscriptionDetailEntityList)
+		{
+			
+			endDateList.add(userSub.getEndDate());
+			
+		}
+		java.util.Collections.sort(endDateList);
+		endDate = endDateList.get(endDateList.size()-1);
+		
+		Date newPlanStartDate = endDate;
+		
+		Calendar cal11 = Calendar.getInstance();
+		 cal11.setTime(newPlanStartDate);
+		 cal11.add(Calendar.DAY_OF_MONTH, 1);
+		 newPlanStartDate = cal11.getTime();
+		
+		Calendar cal1 = Calendar.getInstance();
+		 cal1.setTime(newPlanStartDate);
+		 cal1.add(Calendar.DAY_OF_MONTH, dayCount);
+		  userSubscriptionDetailEntity.setStartDate(newPlanStartDate);
+		  newPlanStartDate = cal1.getTime();
+		   userSubscriptionDetailEntity.setEndDate(newPlanStartDate);
+
+		   userSubscriptionDetailEntity.setIs_plan_active(false);
+		}
+		 
+	 
+	   /**saving subscriptionEntity**/
+	   userSubscriptionDetailRepository.save(userSubscriptionDetailEntity);
 	}
 
 	@Override

@@ -25,7 +25,7 @@ public class UserOrderResponse {
 	private String paymentStatus;
 	private String paymentId;
 	private String planType;
-	private boolean isFuturePlan;
+	private String isFuturePlan;
 	
 	
 }

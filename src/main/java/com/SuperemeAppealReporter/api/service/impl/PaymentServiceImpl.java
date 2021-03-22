@@ -164,7 +164,7 @@ public class PaymentServiceImpl implements PaymentService {
 		 PaymentEntity paymentEntity = paymentRepository.findByTransaction_id(orderId);
 		 paymentEntity.setPayment_id(paymentId);
 		 UserEntity userEntity = paymentEntity.getUser();
-	
+		 
 		  /**Creating an entry in user subscription**/
 		   UserSubscriptionDetailEntity userSubscriptionDetailEntity = new UserSubscriptionDetailEntity();
 		   userSubscriptionDetailEntity.setIs_plan_active(true);
