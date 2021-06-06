@@ -1,5 +1,7 @@
 package com.SuperemeAppealReporter.api.io.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -12,9 +14,13 @@ public interface FirebaseUserDeviceMappingRepository extends PagingAndSortingRep
 	public FirebaseUserDeviceMappingEntity getEntityByDeviceId(@Param("deviceId")String deviceId);
 	
 	@Query(value="from FirebaseUserDeviceMappingEntity fE where fE.userEntity.email = :email")
-	public FirebaseUserDeviceMappingEntity getEntityByUserEmail(@Param("email")String email);
+	public List<FirebaseUserDeviceMappingEntity> getEntityByUserEmail(@Param("email")String email);
 	
 	@Query("select deviceId from FirebaseUserDeviceMappingEntity")
 	public String[] getAllDeviceId();
+	
+	@Query(value="select * from firebase_user_device_mapping where is_active = 1 " , nativeQuery = true)
+	public List<FirebaseUserDeviceMappingEntity> getAllDeviceMappingList();
+	
 	
 }

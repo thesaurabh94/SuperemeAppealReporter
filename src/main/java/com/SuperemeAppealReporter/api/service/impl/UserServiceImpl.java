@@ -1076,8 +1076,12 @@ public class UserServiceImpl implements UserService {
 			logUserActivity(token,email,false,1); //here the the 4th parameter i.e user type does not matter beacuse its logout
 		}
 		else {
-			FirebaseUserDeviceMappingEntity firebaseEntity =firebaseUserDeviceMappingRepository.getEntityByUserEmail(email);
-			firebaseEntity.setUserLoggedIn(false);
+			//FirebaseUserDeviceMappingEntity firebaseEntity =firebaseUserDeviceMappingRepository.getEntityByUserEmail(email);
+			List<FirebaseUserDeviceMappingEntity> firebaseEntityList =firebaseUserDeviceMappingRepository.getEntityByUserEmail(email);
+			for(FirebaseUserDeviceMappingEntity firebaseEntity: firebaseEntityList) {
+				firebaseEntity.setUserLoggedIn(false);	
+			}
+			
 		}
 		
 			commonPaginationResponse = new CommonMessageResponse();

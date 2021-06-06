@@ -203,5 +203,6 @@ public interface RestMappingConstant {
 		String REGISTER_DEVICE_URI = "/registerDevice";
 		String GET_NOTIFICATION_LIST = "/getNotificationList";
 		
+		
 	}
 }

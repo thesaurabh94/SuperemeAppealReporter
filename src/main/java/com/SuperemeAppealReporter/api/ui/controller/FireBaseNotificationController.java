@@ -1,10 +1,11 @@
 package com.SuperemeAppealReporter.api.ui.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -73,16 +74,16 @@ CommonMessageResponse commonMessageResponse = null;
 	}
 	
 
-	@PostMapping
-	public ResponseEntity<BaseApiResponse> getNotificationList(@RequestParam(name = AppConstant.CommonConstant.PAGE_NUMBER, defaultValue = "1") int pageNumber,
-			@RequestParam(name = AppConstant.CommonConstant.PAGE_LIMIT, defaultValue = "8") int perPage)
+	@PostMapping(path = RestMappingConstant.Notification.GET_NOTIFICATION_LIST)
+	public ResponseEntity<BaseApiResponse> getNotificationList()
    {
 		
 		String email = SecurityContextHolder.getContext().getAuthentication().getName();
 		
+		Map retMap = firebaseNotificationService.getNotificationList(email);
 		
-		
-		return null;
+		BaseApiResponse baseApiResponse = ResponseBuilder.getSuccessResponse(retMap);
+		return new ResponseEntity<BaseApiResponse>(baseApiResponse, HttpStatus.OK);
 	}
 	
 	

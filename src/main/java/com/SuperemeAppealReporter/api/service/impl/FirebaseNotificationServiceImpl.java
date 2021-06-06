@@ -1,7 +1,13 @@
 package com.SuperemeAppealReporter.api.service.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +29,7 @@ import com.SuperemeAppealReporter.api.service.UserService;
 import com.SuperemeAppealReporter.api.ui.model.request.RegisterDeviceRequest;
 import com.SuperemeAppealReporter.api.ui.model.request.SendNotificationRequest;
 import com.SuperemeAppealReporter.api.ui.model.response.CommonMessageResponse;
+import com.SuperemeAppealReporter.api.ui.model.response.GetNotificationListResponse;
 
 @Service
 public class FirebaseNotificationServiceImpl implements FirebaseNotificationService{
@@ -106,47 +113,79 @@ public class FirebaseNotificationServiceImpl implements FirebaseNotificationServ
 		}
 		else if(sendRequest.getCategory().equals("OTHER")){
 			
-			FirebaseUserDeviceMappingEntity firebaseUserDeviceMappingEntity = firebaseUserDeviceMappingRepository.getEntityByUserEmail(sendRequest.getUserEmail());
+			List<FirebaseUserDeviceMappingEntity> firebaseUserDeviceMappingEntityList = firebaseUserDeviceMappingRepository.getEntityByUserEmail(sendRequest.getUserEmail());
 		    
-			if(firebaseUserDeviceMappingEntity!=null){
+			if(!"".equals(sendRequest.getUserEmail())) {
 				
-				if(firebaseUserDeviceMappingEntity.isUserLoggedIn()){
+				if(firebaseUserDeviceMappingEntityList!=null){
 					
-					deviceIdArray = new String[]{firebaseUserDeviceMappingEntity.getDeviceId()};
-                    firebaseUserNotificationEntity = new FirebaseUserNotificationEntity();
-				
-					firebaseUserNotificationEntity.setBody(sendRequest.getBody());
-					firebaseUserNotificationEntity.setTitle(sendRequest.getTitle());
-					firebaseUserNotificationEntity.setNotificationType("USER_SPECIFIC");
-					firebaseUserNotificationEntity.setFirebaseUserDeviceMappingEntity(firebaseUserDeviceMappingEntity);
-				   
-					firebaseUserNotificationEntity.setRead(false);
-					firebaseUserNotificationEntity.setStatus("200");
-					firebaseUserNotificationEntity.setRemarks("SUCESS");
-					firebaseUserNotificationRepository.save(firebaseUserNotificationEntity);
+					for(FirebaseUserDeviceMappingEntity firebaseUserDeviceMappingEntity : firebaseUserDeviceMappingEntityList) {
+						if(firebaseUserDeviceMappingEntity.isUserLoggedIn()){
+							
+							deviceIdArray = new String[]{firebaseUserDeviceMappingEntity.getDeviceId()};
+		                    firebaseUserNotificationEntity = new FirebaseUserNotificationEntity();
+						
+							firebaseUserNotificationEntity.setBody(sendRequest.getBody());
+							firebaseUserNotificationEntity.setTitle(sendRequest.getTitle());
+							firebaseUserNotificationEntity.setNotificationType("USER_SPECIFIC");
+							firebaseUserNotificationEntity.setFirebaseUserDeviceMappingEntity(firebaseUserDeviceMappingEntity);
+						   
+							firebaseUserNotificationEntity.setRead(false);
+							firebaseUserNotificationEntity.setStatus("200");
+							firebaseUserNotificationEntity.setRemarks("SUCESS");
+							firebaseUserNotificationRepository.save(firebaseUserNotificationEntity);
+						}
+						else {
+							System.out.println("User found with a device id, but user is logged out");
+							sendNotification = false;
+						}
+					}
+					
+					
 				}
-				else {
-					System.out.println("User found with a device id, but user is logged out");
+				else{
+					System.out.println("No Device Id Found for respective user");
 					sendNotification = false;
 				}
+				
 			}
-			else{
-				System.out.println("No Device Id Found for respective user");
-				sendNotification = false;
+			else {
+				
+				 deviceIdArray = firebaseUserDeviceMappingRepository.getAllDeviceId();
+				 
+				 List<FirebaseUserDeviceMappingEntity> deviceMappingList = firebaseUserDeviceMappingRepository.getAllDeviceMappingList();
+				 
+				 for (FirebaseUserDeviceMappingEntity deviceMappingEntity : deviceMappingList) {
+					 FirebaseUserNotificationEntity newFirebaseUserNotificationEntity = new FirebaseUserNotificationEntity();	 
+					 newFirebaseUserNotificationEntity.setBody(sendRequest.getBody());
+					 newFirebaseUserNotificationEntity.setTitle(sendRequest.getTitle());
+					 newFirebaseUserNotificationEntity.setNotificationType("USER_SPECIFIC");
+					 newFirebaseUserNotificationEntity.setFirebaseUserDeviceMappingEntity(deviceMappingEntity);
+					 newFirebaseUserNotificationEntity.setRead(false);
+					 newFirebaseUserNotificationEntity.setStatus("200");
+					 newFirebaseUserNotificationEntity.setRemarks("SUCESS");
+						firebaseUserNotificationRepository.save(newFirebaseUserNotificationEntity);
+					 
+				 }
+				 
+				 
 			}
+			
+			
 		}
 		
 		if(sendNotification){
 			
-		
+		//	String[] deviceIdArray1 = {"cEDyH2z6Raqgy1CNqeIUE8:APA91bHpfG8owAAqHK2yy8Z9sakX2wbq4MfcT0GTE4aZwrWuLVLDlTUxkCclbnfih-n8vN1zlGDpeNXMjw_hS-LwB3AijmQfTmlqYwxe-9AuP5IouGhg14lzJGJXwsMDdeZut0OTJUc-"};
 		/** Now send the notification **/
 		 JSONObject body = new JSONObject();
 		    body.put("registration_ids", deviceIdArray);
-		    
+		   // body.put("to", "/topics/sarmobile");
 		 
 		    JSONObject notification = new JSONObject();
 		    notification.put("title", sendRequest.getTitle());
 		    notification.put("body", sendRequest.getBody());
+		    notification.put("docId", sendRequest.getDocId());
 		    notification.put("content_available", true);
 		    notification.put("priority", "high");
 		    notification.put("action", "42");
@@ -154,6 +193,7 @@ public class FirebaseNotificationServiceImpl implements FirebaseNotificationServ
 		    JSONObject data = new JSONObject();
 		    data.put("title", sendRequest.getTitle());
 		    data.put("body", sendRequest.getBody());
+		    data.put("docId", sendRequest.getDocId());
 		    data.put("content_available", true);
 		    data.put("priority", "high");
 		    data.put("action", "42");
@@ -206,11 +246,11 @@ public class FirebaseNotificationServiceImpl implements FirebaseNotificationServ
 		    HttpEntity<String> request = new HttpEntity<>(body.toString());
 		 System.out.println("---Firebase JSON----"); 
 		 System.out.println(body.toString());
-		  /*  CompletableFuture<String> pushNotification = */
-		 String firebaseResponse = androidPushNotificationService.send(request);
+				/* CompletableFuture<String> pushNotification = */
+				 String firebaseResponse =  androidPushNotificationService.send(request);
 		
-		
-	
+		  //  String firebaseResponse = pushNotification.get();
+		    System.out.println("--------firebaseResponse----------------: "+firebaseResponse);
 		      commonMessageResponse.setMsg("Notification Sent Success. Response from FireBase : <"+firebaseResponse+">");
 		
 		      if(firebaseResponse.contains("error")){
@@ -248,6 +288,81 @@ public class FirebaseNotificationServiceImpl implements FirebaseNotificationServ
 			
 		}
 		return commonMessageResponse;
+	}
+
+	@Override
+	public Map getNotificationList(String email) {
+		
+		Map retMap = new HashMap();
+		UserEntity userEntity = userService.findByEmail(email);
+		
+		List<FirebaseUserDeviceMappingEntity> firebaseUserDeviceMappingEntityList = firebaseUserDeviceMappingRepository.getEntityByUserEmail(email);
+		
+		List<FirebaseUserNotificationEntity> totalUserNotificationList = new ArrayList<FirebaseUserNotificationEntity>(); 
+		List<FirebaseGenericNotificationEntity> totalGenericNotificationList = new ArrayList<FirebaseGenericNotificationEntity>(); 
+		
+		List<GetNotificationListResponse> notificationList = new ArrayList<GetNotificationListResponse>();
+		
+		for(FirebaseUserDeviceMappingEntity deviceMappingEntity : firebaseUserDeviceMappingEntityList) {
+			
+			Integer deviceId = deviceMappingEntity.getId();
+			
+			List<FirebaseUserNotificationEntity> userNotificationList = firebaseUserNotificationRepository.findByDeviceIdAndStatus(deviceId);
+			List<FirebaseGenericNotificationEntity> genericNotificationList = firebaseGenericNotificationRepository.findNotificationsBetweenDates();			
+			totalUserNotificationList.addAll(userNotificationList);
+			totalGenericNotificationList.addAll(genericNotificationList);
+			
+			for(FirebaseUserNotificationEntity userNotification : userNotificationList) {
+				
+				GetNotificationListResponse resp = new GetNotificationListResponse();
+				
+				resp.setBody(userNotification.getBody());
+				resp.setCategory(userNotification.getNotificationType());
+				resp.setDocId("");
+				resp.setTitle(userNotification.getTitle());
+				resp.setUserEmail(email);
+				resp.setNotificationTime(userNotification.getCreatedDate().getTime());
+				notificationList.add(resp);
+			}
+			
+			
+			for(FirebaseGenericNotificationEntity genericNotification : genericNotificationList) {
+				
+				GetNotificationListResponse resp = new GetNotificationListResponse();
+				
+				resp.setBody(genericNotification.getBody());
+				resp.setCategory(genericNotification.getNotificationType());
+				resp.setDocId(genericNotification.getDocId());
+				resp.setTitle(genericNotification.getTitle());
+				resp.setUserEmail(email);
+				resp.setNotificationTime(genericNotification.getCreatedDate().getTime());
+				notificationList.add(resp);
+			}
+			
+		}
+		
+		List<GetNotificationListResponse> filteredNotificationList= notificationList.stream().filter(e -> e.getUserEmail().equals(email)).collect(Collectors.toList());
+		
+		Collections.sort(notificationList, new Comparator<GetNotificationListResponse>() {
+
+			@Override
+			public int compare(GetNotificationListResponse o1, GetNotificationListResponse o2) {
+				
+				int i = o1.getNotificationTime().compareTo(o2.getNotificationTime());
+				
+				if(i == 0)
+					return i;
+				
+				return -i;
+				
+			}
+			
+		});
+		
+		retMap.put("notificationList", notificationList);
+		
+		
+		return retMap;
 	}
 	
 	
