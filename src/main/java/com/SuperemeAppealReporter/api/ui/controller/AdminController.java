@@ -1,5 +1,7 @@
 package com.SuperemeAppealReporter.api.ui.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,7 @@ import com.SuperemeAppealReporter.api.ui.model.request.DeleteClientRequest;
 import com.SuperemeAppealReporter.api.ui.model.request.DeleteStaffRequest;
 import com.SuperemeAppealReporter.api.ui.model.request.GetClientListRequest;
 import com.SuperemeAppealReporter.api.ui.model.request.GetStaffListRequest;
+import com.SuperemeAppealReporter.api.ui.model.request.GetUserPaymentHistRequest;
 import com.SuperemeAppealReporter.api.ui.model.request.PlaceNewOrderRequest;
 import com.SuperemeAppealReporter.api.ui.model.request.PostRequest;
 import com.SuperemeAppealReporter.api.ui.model.request.SearhClientRequest;
@@ -49,8 +52,10 @@ import com.SuperemeAppealReporter.api.ui.model.response.BaseApiResponse;
 import com.SuperemeAppealReporter.api.ui.model.response.CommonMessageResponse;
 import com.SuperemeAppealReporter.api.ui.model.response.CommonPaginationResponse;
 import com.SuperemeAppealReporter.api.ui.model.response.CustomSignupResponse;
+import com.SuperemeAppealReporter.api.ui.model.response.GetUserListResponse;
 import com.SuperemeAppealReporter.api.ui.model.response.InitiatePaymentResponse;
 import com.SuperemeAppealReporter.api.ui.model.response.ResponseBuilder;
+import com.SuperemeAppealReporter.api.ui.model.response.UserOrderResponse;
 
 @RestController
 @RequestMapping(path =RestMappingConstant.Admin.ADMIN_BASE_URI)
@@ -107,7 +112,19 @@ public class AdminController {
 
 	}
 	
+	/************************************Admin get client list handler handler method**********************************/
+	@PostMapping(path=RestMappingConstant.Admin.GET_USER_LIST_URI)
+	public ResponseEntity<BaseApiResponse> getUsersListHandler() {
 
+		
+		/** Calling service **/
+		List<GetUserListResponse> response = adminService.getUsersListHandler();
+
+		/** Generating Response **/
+		BaseApiResponse baseApiResponse = ResponseBuilder.getSuccessResponse(response);
+		return new ResponseEntity<BaseApiResponse>(baseApiResponse, HttpStatus.OK);
+
+	}
 	
    /*************************************Admin get client list handler handler method**********************************/
 	public ResponseEntity<BaseApiResponse> getSingleClientHandler()
@@ -401,6 +418,18 @@ public class AdminController {
 	}
 	
 
+	@PostMapping(path = RestMappingConstant.Admin.GET_USER_PAYMENT_HIST)	
+	public ResponseEntity<BaseApiResponse> getUserPaymentHist(@RequestBody GetUserPaymentHistRequest request){
+		
+
+		/** Calling service **/
+		List<UserOrderResponse> userOrderList = adminService.getUserPaymentHist(request);
+
+		/** Generating Response **/
+		BaseApiResponse baseApiResponse = ResponseBuilder.getSuccessResponse(userOrderList);
+		return new ResponseEntity<BaseApiResponse>(baseApiResponse, HttpStatus.OK);
+		
+	}
 	
 
 	

@@ -37,8 +37,6 @@ public class FirebaseNotificationServiceImpl implements FirebaseNotificationServ
 	@Autowired
 	private UserService userService;
 	
-	
-	
 	@Autowired 
 	private FirebaseUserDeviceMappingRepository firebaseUserDeviceMappingRepository;
 	

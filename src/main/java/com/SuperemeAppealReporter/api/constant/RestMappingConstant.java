@@ -120,6 +120,10 @@ public interface RestMappingConstant {
 		String ACTIVATE_TRIAL_PLAN = "/activateTrialPlan";
 		
 		String PLACE_NEW_ORDER_URI = "/SuperemeAppealReporter/v1/api/admin/placeNewOrder";
+
+		String GET_USER_LIST_URI = "/getUsersList";
+
+		String GET_USER_PAYMENT_HIST = "/getUserPaymentHist";
 	}
 	
 	public interface Master

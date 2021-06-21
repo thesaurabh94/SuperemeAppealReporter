@@ -1,5 +1,7 @@
 package com.SuperemeAppealReporter.api.service;
 
+import java.util.List;
+
 import com.SuperemeAppealReporter.api.bo.DeleteClientBo;
 import com.SuperemeAppealReporter.api.bo.DeleteStaffBo;
 import com.SuperemeAppealReporter.api.bo.GetClientListBo;
@@ -9,12 +11,15 @@ import com.SuperemeAppealReporter.api.bo.SearchStaffBo;
 import com.SuperemeAppealReporter.api.bo.UpdateClientBo;
 import com.SuperemeAppealReporter.api.bo.UpdateStaffBo;
 import com.SuperemeAppealReporter.api.ui.model.request.ActivateTrailPlanRequest;
+import com.SuperemeAppealReporter.api.ui.model.request.GetUserPaymentHistRequest;
 import com.SuperemeAppealReporter.api.ui.model.request.PlaceNewOrderRequest;
 import com.SuperemeAppealReporter.api.ui.model.request.PostRequest;
 import com.SuperemeAppealReporter.api.ui.model.request.UpdatePostRequest;
 import com.SuperemeAppealReporter.api.ui.model.response.CommonMessageResponse;
 import com.SuperemeAppealReporter.api.ui.model.response.CommonPaginationResponse;
+import com.SuperemeAppealReporter.api.ui.model.response.GetUserListResponse;
 import com.SuperemeAppealReporter.api.ui.model.response.InitiatePaymentResponse;
+import com.SuperemeAppealReporter.api.ui.model.response.UserOrderResponse;
 
 public interface AdminService {
 
@@ -58,6 +63,10 @@ public interface AdminService {
 	public CommonMessageResponse activateTrailPlan(ActivateTrailPlanRequest request);
 
 	public CommonMessageResponse addNewOrder(PlaceNewOrderRequest request);
+
+	public List<GetUserListResponse> getUsersListHandler();
+
+	public List<UserOrderResponse> getUserPaymentHist(GetUserPaymentHistRequest request);
 }
 
 
