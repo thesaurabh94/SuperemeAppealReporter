@@ -88,6 +88,9 @@ public class CaseEntity extends BaseEntity {
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "caseEntity")
 	private List<HeadnoteEntity> headNoteEntitySet;
 	
+	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "caseEntity")
+	private List<CaseTopicEntity> caseTopicEntitySet;
+	
 	@OneToOne(cascade = CascadeType.ALL,fetch=FetchType.LAZY)
 	private DoubleCouncilDetailEntity doubleCouncilDetailEntity;
 	

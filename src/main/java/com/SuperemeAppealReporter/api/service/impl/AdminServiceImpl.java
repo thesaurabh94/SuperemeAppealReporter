@@ -1133,6 +1133,8 @@ public class AdminServiceImpl implements AdminService {
 		userSubscriptionDetailRepository.save(userSubscriptionDetailEntity);
 	}
 
+	
+	@Transactional
 	@Override
 	public CommonMessageResponse addNewOrder(PlaceNewOrderRequest request) {
 
@@ -1141,6 +1143,10 @@ public class AdminServiceImpl implements AdminService {
 		UserEntity userEntity = userRepository.getUserEntityByEmail(useremail);
 		SubscriptionPlanEntity planEntity = subscriptionPlanRepository.findById(planId).get();
 		callToSaveAndActivatePlan(userEntity, planEntity);
+		if(!userEntity.isSubscriptionActive()) {
+			userEntity.setSubscriptionActive(true);
+			
+		}
 		CommonMessageResponse commonMessageResponse = new CommonMessageResponse();
 		commonMessageResponse.setMsg("Plan activated Successfully");
 		return commonMessageResponse;

@@ -77,7 +77,7 @@ List<GetCourtDropDownResponse> dropDownResponseList = new ArrayList<GetCourtDrop
 		HashSet<String> topicNames = searchService.performTopicMasterSearch(searchRequest);
 		
 		GetCommonMasterDataResponse getCommonMasterDataResponse = new GetCommonMasterDataResponse(); 
-List<GetCourtDropDownResponse> dropDownResponseList = new ArrayList<GetCourtDropDownResponse>();
+		List<GetCourtDropDownResponse> dropDownResponseList = new ArrayList<GetCourtDropDownResponse>();
 		
 		for(String out : topicNames){
 			GetCourtDropDownResponse getCourtDropDownResponse = new GetCourtDropDownResponse();

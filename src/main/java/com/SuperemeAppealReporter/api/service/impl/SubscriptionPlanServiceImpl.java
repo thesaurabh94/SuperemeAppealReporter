@@ -254,6 +254,10 @@ public class SubscriptionPlanServiceImpl implements SubscriptionPlanService{
 					subscriptionPan.setIs_plan_active(false);
 					userEntity.setSubscriptionActive(false);
 				}
+				else if(subscriptionPan.getStartDate().compareTo(currDate)==0) {
+					subscriptionPan.setIs_plan_active(true);
+					userEntity.setSubscriptionActive(true);
+				}
 				
 			}
 			

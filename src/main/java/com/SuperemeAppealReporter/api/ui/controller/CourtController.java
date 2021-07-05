@@ -103,7 +103,7 @@ public class CourtController {
 	
 	/******************************Get Court Brnach Request********************************/
 	@PostMapping(path = RestMappingConstant.Court.GET_COURT_URI)
-	public ResponseEntity<BaseApiResponse> deleteCourtBranch(@Valid @RequestBody GetCourtRequest getCourtRequest,
+	public ResponseEntity<BaseApiResponse> getCourtList(@Valid @RequestBody GetCourtRequest getCourtRequest,
 			@RequestParam(name = AppConstant.CommonConstant.PAGE_NUMBER, defaultValue = "1") int pageNumber,
 			@RequestParam(name = AppConstant.CommonConstant.PAGE_LIMIT, defaultValue = "8") int perPage){
 		/******************************Converting Request into Bo********************************/
@@ -120,7 +120,7 @@ public class CourtController {
 	
 	/******************************Get Court Branch Request V2********************************/	
 	@PostMapping(path = RestMappingConstant.Court.GET_COURT_URI_V2)
-	public ResponseEntity<BaseApiResponse> deleteCourtBranchV2(@Valid @RequestBody GetCourtRequest getCourtRequest,
+	public ResponseEntity<BaseApiResponse> getCourtListV2(@Valid @RequestBody GetCourtRequest getCourtRequest,
 			@RequestParam(name = AppConstant.CommonConstant.PAGE_NUMBER, defaultValue = "1") int pageNumber,
 			@RequestParam(name = AppConstant.CommonConstant.PAGE_LIMIT, defaultValue = "8") int perPage){
 		/******************************Converting Request into Bo********************************/

@@ -62,6 +62,7 @@ public class SearchDaoImpl implements SearchDao {
 				+ "   left join case_history ch on ce.case_history_entity_id = ch.id "
 				+ "   left join cases_reffered cr on ce.id = cr.case_entity_id "
 				+ "   left join head_note hn on ce.id = hn.case_entity_id "
+				+ "   left join case_topic ctopic on ce.id = ctopic.case_entity_id "
 				+ "   left join double_council_detail_entity dcde on ce.double_council_detail_entity_id = dcde.id "
 				+ "   left join single_council_detail_entity scde on ce.single_council_detail_entity_id = scde.id where ");
 		
@@ -72,8 +73,11 @@ public class SearchDaoImpl implements SearchDao {
 		if(searchRequest.getMainSearchCourtId()!=null)
 		{
 			
-			query.append(" c.court_type = :COURT_NAME  ");
+			//query.append(" cb.branch_name = :COURT_NAME  ");
+			//paramMap.put("COURT_NAME", searchRequest.getMainSearchCourtId().trim());
+			query.append(" cb.id = :COURT_NAME  ");
 			paramMap.put("COURT_NAME", searchRequest.getMainSearchCourtId().trim());
+			
 			flag = true;
 		}
 		if (searchRequest.getStartsWithAlphabet() != null)
@@ -200,16 +204,17 @@ public class SearchDaoImpl implements SearchDao {
 			}
 			flag = true;
 		}
+		//topic search
 		if (searchRequest.getMainSearchTopic()!=null)
 		{
 			if(flag)
 			{
-				query.append(" and hn.topic LIKE :TOPIC  ");
+				query.append(" and ctopic.topic LIKE :TOPIC  ");
 				paramMap.put("TOPIC", "%"+searchRequest.getMainSearchTopic().trim()+"%");
 			}
 			else
 			{
-				query.append("  hn.topic LIKE :TOPIC  ");
+				query.append("  ctopic.topic LIKE :TOPIC  ");
 				paramMap.put("TOPIC", "%"+searchRequest.getMainSearchTopic().trim()+"%");
 			}
 			flag = true;
@@ -523,14 +528,19 @@ public class SearchDaoImpl implements SearchDao {
 		{
 			if(flag)
 			{
-				query.append(" and j.journal_type LIKE :JOURNAL_TYPE ");
-				paramMap.put("JOURNAL_TYPE","%"+searchRequest.getCitationSearchJournal().trim()+"%");
+				//query.append(" and j.journal_type LIKE :JOURNAL_TYPE ");
+				//paramMap.put("JOURNAL_TYPE","%"+searchRequest.getCitationSearchJournal().trim()+"%");
+				query.append(" and j.journal_type =:JOURNAL_TYPE ");
+				paramMap.put("JOURNAL_TYPE",searchRequest.getCitationSearchJournal().trim());
 				
 			}
 			else
 			{
-				query.append(" j.journal_type LIKE :JOURNAL_TYPE ");
-				paramMap.put("JOURNAL_TYPE","%"+searchRequest.getCitationSearchJournal().trim()+"%");
+//				query.append(" j.journal_type LIKE :JOURNAL_TYPE ");
+//				paramMap.put("JOURNAL_TYPE","%"+searchRequest.getCitationSearchJournal().trim()+"%");
+				
+				query.append(" j.journal_type =:JOURNAL_TYPE ");
+				paramMap.put("JOURNAL_TYPE",searchRequest.getCitationSearchJournal().trim());
 			}
 			flag = true;
 		}

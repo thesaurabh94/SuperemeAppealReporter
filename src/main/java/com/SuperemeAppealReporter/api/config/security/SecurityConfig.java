@@ -96,7 +96,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers(HttpMethod.POST,"/SuperemeAppealReporter/v1/api/admin/deleteCourtBranch").hasAnyRole("ADMIN",
 					"SUPER_ADMIN")
 			.antMatchers(HttpMethod.POST,"/SuperemeAppealReporter/v1/api/admin/getCourtList").hasAnyRole("ADMIN",
-					"SUPER_ADMIN")
+					"SUPER_ADMIN","USER","DATA_ENTRY_OPERATOR")
 			.antMatchers(HttpMethod.GET,"/SuperemeAppealReporter/v1/api/admin/getDashBoard").hasAnyRole("ADMIN",
 					"SUPER_ADMIN","DATA_ENTRY_OPERATOR")
 			.antMatchers(HttpMethod.GET,"/SuperemeAppealReporter/v1/api/admin/getDashBoard").hasAnyRole("ADMIN",

@@ -66,5 +66,5 @@ public class GetCaseListResponseForSingleCase {
 	
 	private DoubleCouncilDetailResponse doubleCouncilDetailResponse;
 	
-	
+	private List<String> caseTopics;
 }

@@ -159,8 +159,10 @@ public class CourtServiceImpl implements CourtService{
 	
 		if (pageNumber > 0)
 			pageNumber = pageNumber - 1;
-		
-		
+		else {
+			perPageLimit = 10000;
+			pageNumber = 0;
+		}
 		
 		Pageable pageableRequest = PageRequest.of(pageNumber, perPageLimit);
 		Page<CourtBranchEntity> courtEntityPage = null;

@@ -1,6 +1,30 @@
 
 package com.SuperemeAppealReporter.api.service.impl;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.SuperemeAppealReporter.api.bo.AddCaseBo;
 import com.SuperemeAppealReporter.api.bo.GetCaseListBo;
 import com.SuperemeAppealReporter.api.bo.UploadCasePdfBo;
@@ -10,6 +34,7 @@ import com.SuperemeAppealReporter.api.io.dao.CaseDao;
 import com.SuperemeAppealReporter.api.io.entity.AdditionalAppellantRespondentEntity;
 import com.SuperemeAppealReporter.api.io.entity.CaseEntity;
 import com.SuperemeAppealReporter.api.io.entity.CaseHistoryEntity;
+import com.SuperemeAppealReporter.api.io.entity.CaseTopicEntity;
 import com.SuperemeAppealReporter.api.io.entity.CasesRefferedEntity;
 import com.SuperemeAppealReporter.api.io.entity.CitationCategoryEntity;
 import com.SuperemeAppealReporter.api.io.entity.CitationEntity;
@@ -30,7 +55,6 @@ import com.SuperemeAppealReporter.api.io.repository.CourtRepository;
 import com.SuperemeAppealReporter.api.io.repository.JournalReposiotry;
 import com.SuperemeAppealReporter.api.service.CaseService;
 import com.SuperemeAppealReporter.api.service.MasterService;
-import com.SuperemeAppealReporter.api.service.impl.CaseServiceImpl;
 import com.SuperemeAppealReporter.api.ui.model.request.AdditionalAppellantRespondentRequest;
 import com.SuperemeAppealReporter.api.ui.model.request.CaseHistoryRequest;
 import com.SuperemeAppealReporter.api.ui.model.request.CasesRefferedRequest;
@@ -62,28 +86,6 @@ import com.SuperemeAppealReporter.api.ui.model.response.JournalResponseForSingle
 import com.SuperemeAppealReporter.api.ui.model.response.SecondaryCitationResponseForSingleCase;
 import com.SuperemeAppealReporter.api.ui.model.response.SingleCouncileDetailResponse;
 import com.SuperemeAppealReporter.api.ui.model.response.YearResponse;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional
@@ -238,6 +240,16 @@ public class CaseServiceImpl implements CaseService {
 				
 				headnoteEntityList.add(headnoteEntity);
 			}
+			
+			/************Adding topics in the case*************/
+			List<String> caseTopics = addCaseBo.getCaseTopics();
+			List<CaseTopicEntity> topicEntityList = new ArrayList<CaseTopicEntity>();
+			for(String topic : caseTopics) {
+				CaseTopicEntity topicEntity = new CaseTopicEntity();
+				topicEntity.setTopic(topic);
+				topicEntityList.add(topicEntity);
+			}
+			
 			List<CasesRefferedEntity> casesRefferedEntityList = new ArrayList<>();
 			List<CasesRefferedRequest> casesRefferedRequestList = addCaseBo.getCasesReferredRequestList();
 			for (CasesRefferedRequest req : casesRefferedRequestList) {
@@ -286,7 +298,10 @@ public class CaseServiceImpl implements CaseService {
 			caseEntity.setOriginalPdfPath(null);
 			caseEntity.setRemarkable(remarkable);
 			caseEntity.setRespondent(respondent);
-			
+			caseEntity.setCaseTopicEntitySet(topicEntityList);
+			for(CaseTopicEntity topic : topicEntityList) {
+				topic.setCaseEntity(caseEntity);
+			}
 			for (HeadnoteEntity headnoteEntity : headnoteEntityList)
 				headnoteEntity.setCaseEntity(caseEntity);
 			for (CasesRefferedEntity casesReferredEntity : casesRefferedEntityList)
@@ -446,6 +461,16 @@ public class CaseServiceImpl implements CaseService {
 				
 				headnoteEntityList.add(headnoteEntity);
 			}
+			
+			/************Adding topics in the case*************/
+			List<String> caseTopics = addCaseBo.getCaseTopics();
+			List<CaseTopicEntity> topicEntityList = new ArrayList<CaseTopicEntity>();
+			for(String topic : caseTopics) {
+				CaseTopicEntity topicEntity = new CaseTopicEntity();
+				topicEntity.setTopic(topic);
+				topicEntityList.add(topicEntity);
+			}
+			
 			List<CasesRefferedEntity> casesRefferedEntityList = new ArrayList<>();
 			List<CasesRefferedRequest> casesRefferedRequestList = addCaseBo.getCasesReferredRequestList();
 			for (CasesRefferedRequest req : casesRefferedRequestList) {
@@ -496,6 +521,10 @@ public class CaseServiceImpl implements CaseService {
 			caseEntity.setOverruled(overuledStatus);
 			caseEntity.setLive(liveStatus);
 			caseEntity.setCreatedDate(createdDate);
+			caseEntity.setCaseTopicEntitySet(topicEntityList);
+			for(CaseTopicEntity topic : topicEntityList) {
+				topic.setCaseEntity(caseEntity);
+			}
 			for (HeadnoteEntity headnoteEntity : headnoteEntityList)
 				headnoteEntity.setCaseEntity(caseEntity);
 			for (CasesRefferedEntity casesReferredEntity : casesRefferedEntityList)
@@ -1089,6 +1118,12 @@ public class CaseServiceImpl implements CaseService {
 			BeanUtils.copyProperties(e, headnoteResponse);
 			headnoteResponses.add(headnoteResponse);
 		}
+		
+		List<String> caseTopics = new ArrayList<String>();
+		for(CaseTopicEntity topics : caseEntity.getCaseTopicEntitySet()) {
+			caseTopics.add(topics.getTopic());
+		}
+		
 		SingleCouncilDetailEntity singleCouncilEntity = caseEntity.getSingleCouncilDetailEntity();
 		DoubleCouncilDetailEntity doubleCouncilDetailEntity = caseEntity.getDoubleCouncilDetailEntity();
 		if (singleCouncilEntity != null) {
@@ -1103,6 +1138,7 @@ public class CaseServiceImpl implements CaseService {
 			getCaseListResponse.setDoubleCouncilDetailResponse(detailResponse);
 		}
 		getCaseListResponse.setHeadnoteResponseList(headnoteResponses);
+		getCaseListResponse.setCaseTopics(caseTopics);
 		return getCaseListResponse;
 	}
 

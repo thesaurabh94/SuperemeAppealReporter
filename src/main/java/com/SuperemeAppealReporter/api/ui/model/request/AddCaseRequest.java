@@ -49,4 +49,5 @@ public class AddCaseRequest {
 	
 	private DoubleCouncilDetailRequest doubleCouncilDetailRequest;
 	
+	private List<String> caseTopics;
 }

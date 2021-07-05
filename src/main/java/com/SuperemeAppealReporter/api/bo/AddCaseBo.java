@@ -61,4 +61,6 @@ public class AddCaseBo {
 	private SingleCouncilDetailRequest singleCouncilDetailRequest;
 	
 	private DoubleCouncilDetailRequest doubleCouncilDetailRequest;
+	
+	private List<String> caseTopics;
 }
