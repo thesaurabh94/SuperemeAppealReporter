@@ -53,6 +53,9 @@ public interface RestMappingConstant {
 		String LOGIN_HISTORY_FOR_ADMIN_PANEL = "/loginHistoryByClientIdForAdminPanel";
 		
 		String DELETE_MY_CASE_IN_LIBRARY = "/deleteCaseFromMyLibrary/{docId}";
+
+
+		String SENT_OTP = "sendOtp";
 		
 	}
 	

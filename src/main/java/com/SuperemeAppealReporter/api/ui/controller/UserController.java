@@ -70,7 +70,6 @@ public class UserController {
 	    /**calling service layer**/
 		DahsboardResponse dashboardResponse = userService.giveDashboardResponseService(emailId);
 		
-
 		/**Generating Response**/
 		BaseApiResponse baseApiResponse  = ResponseBuilder.getSuccessResponse(dashboardResponse);
 		return new ResponseEntity<BaseApiResponse>(baseApiResponse,HttpStatus.OK);
@@ -316,7 +315,21 @@ public class UserController {
 		return new ResponseEntity<BaseApiResponse>(baseApiResponse,HttpStatus.OK);
 	}
 	
-	
+	@GetMapping(path = RestMappingConstant.User.SENT_OTP)
+	public ResponseEntity<BaseApiResponse> sendOtp(@PathVariable("docId") String docId){
+		
+		
+		String email = SecurityContextHolder.getContext().getAuthentication().getName();
+		
+		
+		/**Calling service **/
+		CommonMessageResponse commonMessageResponse = userService.deleteCaseForMyLibrary(email, docId);
+		
+		
+		/**Generating Response**/
+		BaseApiResponse baseApiResponse  = ResponseBuilder.getSuccessResponse(commonMessageResponse);
+		return new ResponseEntity<BaseApiResponse>(baseApiResponse,HttpStatus.OK);
+	}
 		
 	
 

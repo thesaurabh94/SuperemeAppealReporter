@@ -4,7 +4,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,10 +20,10 @@ import com.SuperemeAppealReporter.api.constant.ErrorConstant;
 import com.SuperemeAppealReporter.api.exception.type.AppException;
 import com.SuperemeAppealReporter.api.io.dao.SearchDao;
 import com.SuperemeAppealReporter.api.io.entity.CaseEntity;
-import com.SuperemeAppealReporter.api.io.entity.CaseHistoryEntity;
 import com.SuperemeAppealReporter.api.io.entity.HeadnoteEntity;
 import com.SuperemeAppealReporter.api.io.entity.UserEntity;
 import com.SuperemeAppealReporter.api.io.repository.CaseRepository;
+import com.SuperemeAppealReporter.api.io.repository.CaseTopicRepository;
 import com.SuperemeAppealReporter.api.io.repository.CourtRepository;
 import com.SuperemeAppealReporter.api.io.repository.HeadnoteRepository;
 import com.SuperemeAppealReporter.api.io.repository.UserRepository;
@@ -55,6 +54,8 @@ public class SearchServiceImpl implements SearchService {
 	@Autowired
 	HeadnoteRepository headnoteRepository;
 	
+	@Autowired
+	CaseTopicRepository caseTopicRespository;
 	
 	@Override
 	public CommonPaginationResponse searchService(SearchRequest searchRequest,int pageNumber,int perPage) {
@@ -492,7 +493,8 @@ public class SearchServiceImpl implements SearchService {
 		//System.out.println("----isLive----"+headnoteRepository.findById(260).get().getCaseEntity().isLive());
 		if(StringUtils.isNotBlank(searchRequest.getSearchKeywords())){
 			Pageable pageableRequest = PageRequest.of(0, 100);
-		Page<String> stringArrListPage = headnoteRepository.searchTopic(searchRequest.getSearchKeywords().toUpperCase(),pageableRequest);
+		//Page<String> stringArrListPage = headnoteRepository.searchTopic(searchRequest.getSearchKeywords().toUpperCase(),pageableRequest);
+		Page<String> stringArrListPage = caseTopicRespository.searchTopic(searchRequest.getSearchKeywords().toUpperCase(),pageableRequest);
 		
 		List<String> stringArrList = stringArrListPage.getContent();
 		System.out.println("------------stringArrList---------"+stringArrList.size());

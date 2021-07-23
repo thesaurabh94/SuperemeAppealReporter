@@ -54,7 +54,7 @@ public class SearchController {
 		HashSet<String> actNames = searchService.performActNameMasterSearch(searchRequest);
 		
 		GetCommonMasterDataResponse getCommonMasterDataResponse = new GetCommonMasterDataResponse(); 
-List<GetCourtDropDownResponse> dropDownResponseList = new ArrayList<GetCourtDropDownResponse>();
+		List<GetCourtDropDownResponse> dropDownResponseList = new ArrayList<GetCourtDropDownResponse>();
 		
 		for(String out : actNames){
 			GetCourtDropDownResponse getCourtDropDownResponse = new GetCourtDropDownResponse();
