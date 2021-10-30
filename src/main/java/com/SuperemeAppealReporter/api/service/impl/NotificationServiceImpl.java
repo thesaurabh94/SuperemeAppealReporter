@@ -71,7 +71,7 @@ public class NotificationServiceImpl implements NotificationService {
 	        	if(mail.getBelongsTo().equals(UserType.USER))
 		             html = templateEngine.process("email-template-updated-user-onboarding", context);
 	        }
-	        helper.setFrom("system@saronline.co.in");
+	        helper.setFrom("system@saronline.in");
 	     
 	        helper.setTo(mail.getTo());
 	        helper.setText(html, true);
@@ -120,7 +120,7 @@ public class NotificationServiceImpl implements NotificationService {
 	        	if(!(onBoardingMail.getBelongsTo().equals("USER")))
 		             html = templateEngine.process("email-template-updated-staff-onboarding.html", context);
 	        }
-	        helper.setFrom("system@saronline.co.in");
+	        helper.setFrom("system@saronline.in");
 	       
 	        helper.setTo(onBoardingMail.getTo());
 	        helper.setText(html, true);

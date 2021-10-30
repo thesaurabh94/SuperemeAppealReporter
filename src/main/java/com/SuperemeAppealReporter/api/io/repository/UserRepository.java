@@ -16,7 +16,7 @@ public interface UserRepository extends PagingAndSortingRepository<UserEntity, I
 	@Query(value = "select * from user where email = ?1 and is_active = 1 order by created_date desc",nativeQuery = true)
 	UserEntity getUserEntityByEmail(String email);
 	
-	@Query(value = "select * from user where type = ?1 order by created_date desc",nativeQuery = true)
+	@Query(value = "select * from user where type = ?1 and is_active = 1 order by created_date desc",nativeQuery = true)
 	Page<UserEntity> getUserEntityPageByUserType(String userType, Pageable pageable);
 	
 	@Query(value = "select * from user where type = ?1 and is_active = 1 and is_subscription_active=1 order by created_date desc",nativeQuery = true)

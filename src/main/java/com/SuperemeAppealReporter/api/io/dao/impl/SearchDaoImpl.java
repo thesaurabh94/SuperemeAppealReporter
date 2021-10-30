@@ -502,7 +502,7 @@ public class SearchDaoImpl implements SearchDao {
 				+ "     left join citation c on ce.citation_entity_id = c.id "
 				+ "     left join secondary_citation scc on c.secondary_citation_entity_id = scc.id"
 				+ "     left join citation_category cc on scc.citation_category_entity_id = cc.id"
-				+ "     left join journal j on c.journal_entity_id = j.id where ");
+				+ "     left join journal j on scc.journal_entity_id = j.id where ");
 		
 		}
 		else {
@@ -935,7 +935,8 @@ public class SearchDaoImpl implements SearchDao {
 						+ "    DATE(CONCAT_WS('-', ch.decided_year, ch.decided_month, ch.decided_day)) as date_1 "
 						+ "    FROM case_entity ce left join case_history ch on ce.case_history_entity_id =  ch.id "
 						+ "    left join head_note hn on ce.id = hn.case_entity_id "
-						+ "    where ( upper(hn.topic) like :SEARCHVALUE or upper(ce.appellant) like :SEARCHVALUE or upper(ce.respondent) like :SEARCHVALUE)  "
+						+ "	   left join case_topic ct on ct.case_entity_id = ce.id	"
+						+ "    where ( upper(ct.topic) like :SEARCHVALUE or upper(ce.appellant) like :SEARCHVALUE or upper(ce.respondent) like :SEARCHVALUE)  "
 						+ "    and ce.is_active = 1"
 						+ "    and ce.is_live = 1  ");
 						

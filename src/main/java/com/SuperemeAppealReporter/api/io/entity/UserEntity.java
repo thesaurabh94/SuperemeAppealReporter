@@ -65,8 +65,10 @@ public class UserEntity extends BaseEntity {
 	@Column(name = "profile_picture_path", nullable = false)
 	private String profilePicturePath;
 	
-	
-	
+	/*
+	 * @Column(name = "is_staff_active", nullable = true) private boolean isDeleted
+	 * = false;
+	 */
 	
 	
 	

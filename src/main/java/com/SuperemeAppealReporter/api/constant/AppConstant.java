@@ -36,7 +36,7 @@ public interface AppConstant {
 		public interface OnBoardingMail
 		{
 		   String SUBJECT = "Activate your SAR account";
-		   String EMAIL_VERIFICATION_REDIRECT_URL = "http://www.saronline.co.in/verifyEmail";
+		   String EMAIL_VERIFICATION_REDIRECT_URL = "http://www.saronline.in/verifyEmail";
 		   String EMAIL_VERIFICATION_REDIRECT_URL_KEY = "emailVerificationUrl";
 		   String CUSTOM_SUBJECT = "Welcome Onboard !";
 		}
@@ -44,7 +44,7 @@ public interface AppConstant {
 		public interface ForgetPasswordMail
 		{
 			String SUBJECT = "Reset your SAR account password";
-			String FORGET_PASSWORD_REDIRECT_URL = "http://www.saronline.co.in/resetPassword";
+			String FORGET_PASSWORD_REDIRECT_URL = "http://www.saronline.in/resetPassword";
 			String FORGET_PASSWORD_REDIRECT_URL_KEY = "forgetPasswordUrl";
 		}
 		
