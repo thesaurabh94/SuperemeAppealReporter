@@ -301,8 +301,11 @@ public class FirebaseNotificationServiceImpl implements FirebaseNotificationServ
 		
 		List<GetNotificationListResponse> notificationList = new ArrayList<GetNotificationListResponse>();
 		
+		boolean singleDeviceFlag = true;
+		
 		for(FirebaseUserDeviceMappingEntity deviceMappingEntity : firebaseUserDeviceMappingEntityList) {
-			
+			if(singleDeviceFlag) {
+				
 			Integer deviceId = deviceMappingEntity.getId();
 			
 			List<FirebaseUserNotificationEntity> userNotificationList = firebaseUserNotificationRepository.findByDeviceIdAndStatus(deviceId);
@@ -336,7 +339,8 @@ public class FirebaseNotificationServiceImpl implements FirebaseNotificationServ
 				resp.setNotificationTime(genericNotification.getCreatedDate().getTime());
 				notificationList.add(resp);
 			}
-			
+			singleDeviceFlag = false;
+			}
 		}
 		
 		List<GetNotificationListResponse> filteredNotificationList= notificationList.stream().filter(e -> e.getUserEmail().equals(email)).collect(Collectors.toList());

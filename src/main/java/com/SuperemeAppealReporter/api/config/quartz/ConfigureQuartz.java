@@ -78,7 +78,7 @@ public class ConfigureQuartz {
 		CronTriggerFactoryBean factoryBean = new CronTriggerFactoryBean();
 		
 		factoryBean.setJobDetail(createJobDetail().getObject());
-		factoryBean.setCronExpression("0 0/1 * 1/1 * ? *");
+		factoryBean.setCronExpression("0 */10 * ? * *");
 	
 		factoryBean.setMisfireInstruction(SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
 	return factoryBean;

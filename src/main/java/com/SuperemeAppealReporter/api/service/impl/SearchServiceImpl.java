@@ -2,6 +2,7 @@ package com.SuperemeAppealReporter.api.service.impl;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -285,6 +286,18 @@ public class SearchServiceImpl implements SearchService {
 		
 		List<HeadnoteEntity> headnoteEntities = headnoteRepository.getRecord(Integer.parseInt(String.valueOf(obj[7])));
 		
+		//Sorting the list by creation date
+		headnoteEntities.sort(new Comparator<HeadnoteEntity>() {
+
+			@Override
+			public int compare(HeadnoteEntity o1, HeadnoteEntity o2) {
+				if (o1.getCreatedDate() == null || o2.getCreatedDate() == null) {
+				      return 0;
+				    }
+				    return o1.getCreatedDate().compareTo(o2.getCreatedDate());
+			}
+		});
+		
 		String headNote = "";
 		boolean flag = false;
 		
@@ -377,6 +390,15 @@ public class SearchServiceImpl implements SearchService {
 			
 		}
 		
+		for(HeadnoteEntity headNoteEntity : headnoteEntities) {
+			
+			if(headNoteEntity.getPriority().equals("A")) {
+				
+				headNote = headNoteEntity.getHeadnote();
+				break;
+			}
+			
+		}
 		
 			searchCaseListResponse.setDocId(docId);
 			

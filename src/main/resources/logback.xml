@@ -69,7 +69,7 @@
         </triggeringPolicy>
     </appender>  
      
-    <logger name="com.SupremeAppealReporter.api" level="DEBUG">
+    <logger name="com.SupremeAppealReporter.api" level="INFO">
         <appender-ref ref="applicationLog" />
         <appender-ref ref="console" />
     </logger>
@@ -79,12 +79,12 @@
         <appender-ref ref="console" />
     </logger>
      
-    <logger name="org.springframework" level="DEBUG">
+    <logger name="org.springframework" level="INFO">
         <appender-ref ref="springLog" />
         <appender-ref ref="console" />
     </logger>
      
-    <logger name="org.hibernate" level="DEBUG">
+    <logger name="org.hibernate" level="INFO">
         <appender-ref ref="hibernateLog" />
         <appender-ref ref="console" />
     </logger>

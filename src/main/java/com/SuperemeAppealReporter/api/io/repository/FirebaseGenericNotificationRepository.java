@@ -13,7 +13,7 @@ import com.SuperemeAppealReporter.api.io.entity.FirebaseGenericNotificationEntit
 @Repository
 public interface FirebaseGenericNotificationRepository extends PagingAndSortingRepository<FirebaseGenericNotificationEntity, Integer> {
 
-	@Query(value = "select * from firebase_generic_notification where is_active = 1 and status = 200 order by created_date desc ", nativeQuery = true)
+	@Query(value = "select * from firebase_generic_notification where is_active = 1 order by created_date desc limit 30", nativeQuery = true)
 	List<FirebaseGenericNotificationEntity> findNotificationsBetweenDates();
 
 	

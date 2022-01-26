@@ -240,7 +240,7 @@ public class SubscriptionPlanServiceImpl implements SubscriptionPlanService{
 				endCalendar.setTime(userCreateDate);
 				int diffYear = endCalendar.get(Calendar.YEAR) - startCalendar.get(Calendar.YEAR);
 				int diffMonth = diffYear * 12 + endCalendar.get(Calendar.MONTH) - startCalendar.get(Calendar.MONTH);
-				if(diffMonth > 1) {
+				if(diffMonth < 0) {
 					userEntity.setTrialPlanActive(false);
 					userEntity.setSubscriptionActive(false);
 				}
